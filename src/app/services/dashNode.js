@@ -6,12 +6,12 @@ const Filter      = require('bitcoin-filter');
 const Inventory   = require('bitcoin-inventory');
 const Download    = require('blockchain-download');
 // import network parameters for Bitcoin
-const params      = require('webcoin-bitcoin-testnet');
+const params      = require('webcoin-dash-testnet');
 const PeerGroup   = require('bitcoin-net').PeerGroup;
 const Blockchain  = require('blockchain-spv');
 const utils       = require('bitcoin-util');
 const levelup     = require('levelup');
-const debug       = require('debug')('gotoshi:bitcoinNode');
+const debug       = require('debug')('gotoshi:dashNode');
 const pump        = require('pump');
 const BN          = require('bn.js');
 const reverse     = require('buffer-reverse');
@@ -21,21 +21,21 @@ class BitcoinNode extends EventEmitter {
         super();
         this.$q = $q;
         this.subscriptions = [];
-        //params.net.webSeeds = ['ws://localhost:8193'];
-        params.net.webSeeds = ['ws://gotoshi.herokuapp.com:80'];
+        params.net.webSeeds = ['ws://localhost:8193'];
+        //params.net.webSeeds = ['ws://gotoshi.herokuapp.com:80'];
         //params.net.webSeeds.push('ws://localhost:8193');
         //params.net.webSeeds.push('ws://gotoshi.herokuapp.com:80');
 
-        params.blockchain.checkpoints = [ //testnet
+        params.blockchain.checkpoints = [ //testnet genesis block
             {
-                height: 1012032, //heigth/2016
+                height: 0,
                 header: {
-                    version: 536870912,
-                    prevHash: utils.toHash('00000000000004101d04ebc90ade5d4b911aa13c038ecf25e9887d877203ddb8'),
-                    merkleRoot: utils.toHash('68344f9ea6407d77d5c68609272204070f57c9fc7aad68186a0d5608f10bd80a'),
-                    timestamp: new Date('2016-10-23T14:00:43Z') / 1000, // | 0 ?
-                    bits: 436546764,
-                    nonce: 575841817
+                    version: 1,
+                    prevHash: u.nullHash,
+                    merkleRoot: utils.toHash('e0028eb9648db56b1ac77cf090b99048a8007e2bb64b68f092c03c7f56a662c7'),
+                    timestamp: 1390666206,
+                    bits: 0x1e0ffff0,
+                    nonce: 3861367235
                 }
             }
         ];
@@ -105,23 +105,23 @@ class BitcoinNode extends EventEmitter {
                 localStorage.setItem('block', JSON.stringify(block));
             }
             /*if(this.timeout) $timeout.cancel(this.timeout);
-            this.timeout = $timeout(()=> {
-                if(this.timeout) $timeout.cancel(this.timeout);
-                debug("trigger rescan");
-                if (!this.rescan) {
-                    this.peers.send('mempool');
-                    this.rescan = true;
-                    chain.getBlockAtHeight(params.blockchain.checkpoints[0].height, function (err, startBlock) {
-                        if (err) {
-                            debug('error looking up block at height', params.blockchain.checkpoints[0].height);
-                            return false;
-                        }
+             this.timeout = $timeout(()=> {
+             if(this.timeout) $timeout.cancel(this.timeout);
+             debug("trigger rescan");
+             if (!this.rescan) {
+             this.peers.send('mempool');
+             this.rescan = true;
+             chain.getBlockAtHeight(params.blockchain.checkpoints[0].height, function (err, startBlock) {
+             if (err) {
+             debug('error looking up block at height', params.blockchain.checkpoints[0].height);
+             return false;
+             }
 
-                        const readStream = chain.createReadStream({ from: startBlock.header.getHash(), inclusive: false });
-                        readStream.pipe(blockStream);
-                    });
-                }
-            }, 10*1000);*/
+             const readStream = chain.createReadStream({ from: startBlock.header.getHash(), inclusive: false });
+             readStream.pipe(blockStream);
+             });
+             }
+             }, 10*1000);*/
         });
 
         this.peers.once('peer', () => {
@@ -139,7 +139,7 @@ class BitcoinNode extends EventEmitter {
 
             const readStream = chain.createReadStream({ from: startBlock.header.getHash(), inclusive: false });
             readStream.pipe(blockStream);
-           // });
+            // });
 
             const headers = new Download.HeaderStream(this.peers);
             pump(
@@ -194,9 +194,9 @@ class BitcoinNode extends EventEmitter {
         this.connected = true;
         this.peers.connect();
         /*this.peers.accept((err) => {
-            if (err) return console.error(err);
-            debug('accepting incoming connections');
-        })*/
+         if (err) return console.error(err);
+         debug('accepting incoming connections');
+         })*/
     }
     getHeight() {
         return this.lastBlock;
