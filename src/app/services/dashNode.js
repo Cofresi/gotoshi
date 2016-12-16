@@ -16,12 +16,12 @@ const pump        = require('pump');
 const BN          = require('bn.js');
 const reverse     = require('buffer-reverse');
 
-class BitcoinNode extends EventEmitter {
+class DashNode extends EventEmitter {
     constructor($q, $timeout) {
         super();
         this.$q = $q;
         this.subscriptions = [];
-        params.net.webSeeds = ['ws://localhost:8193'];
+        params.net.webSeeds = ['ws://195.141.143.55:8193'];
         //params.net.webSeeds = ['ws://gotoshi.herokuapp.com:80'];
         //params.net.webSeeds.push('ws://localhost:8193');
         //params.net.webSeeds.push('ws://gotoshi.herokuapp.com:80');
@@ -272,8 +272,8 @@ class BitcoinNode extends EventEmitter {
     }
 }
 
-BitcoinNode.$inject = ['$q', '$timeout'];
+DashNode.$inject = ['$q', '$timeout'];
 
-export default angular.module('services.bitcoin-node', [])
-    .service('bitcoinNode', BitcoinNode)
+export default angular.module('services.dash-node', [])
+    .service('dashNode', DashNode)
     .name;

@@ -6,7 +6,7 @@ const Filter      = require('bitcoin-filter');
 const Inventory   = require('bitcoin-inventory');
 const Download    = require('blockchain-download');
 // import network parameters for Bitcoin
-const params      = require('webcoin-bitcoin-testnet');
+const params      = require('webcoin-dash-testnet');
 const PeerGroup   = require('bitcoin-net').PeerGroup;
 const Blockchain  = require('blockchain-spv');
 const utils       = require('bitcoin-util');
@@ -21,11 +21,12 @@ class BitcoinNode extends EventEmitter {
         super();
         this.$q = $q;
         this.subscriptions = [];
-        //params.net.webSeeds = ['ws://localhost:8193'];
-        params.net.webSeeds = ['ws://gotoshi.herokuapp.com:80'];
-        //params.net.webSeeds.push('ws://localhost:8193');
+        //params.net.webSeeds = ['ws://195.141.143.55:8193'];
+        params.net.webSeeds = ['ws://localhost:8193'];
+        //params.net.webSeeds = ['ws://gotoshi.herokuapp.com:80'];
+        params.net.webSeeds.push['ws://195.141.143.55:8193'];
         //params.net.webSeeds.push('ws://gotoshi.herokuapp.com:80');
-
+/*
         params.blockchain.checkpoints = [ //testnet
             {
                 height: 1012032, //heigth/2016
@@ -36,6 +37,20 @@ class BitcoinNode extends EventEmitter {
                     timestamp: new Date('2016-10-23T14:00:43Z') / 1000, // | 0 ?
                     bits: 436546764,
                     nonce: 575841817
+                }
+            }
+        ];
+*/
+        params.blockchain.checkpoints = [ //testnet genesis block
+            {
+                height: 0,
+                header: {
+                    version: 1,
+                    prevHash: utils.nullHash,
+                    merkleRoot: utils.toHash('e0028eb9648db56b1ac77cf090b99048a8007e2bb64b68f092c03c7f56a662c7'),
+                    timestamp: 1390666206,
+                    bits: 0x1e0ffff0,
+                    nonce: 3861367235
                 }
             }
         ];
